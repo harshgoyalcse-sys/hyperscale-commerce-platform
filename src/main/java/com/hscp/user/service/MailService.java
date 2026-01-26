@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,6 +14,7 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
+    @Async
     public void sendWelcomeMail(String to, String name) {
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -21,7 +23,6 @@ public class MailService {
         message.setText(
                 "Hi " + name + ",\n\n" +
                         "Welcome to Hyperscale Commerce Platform.\n\n" +
-                        "We’re excited to have you onboard.\n\n" +
                         "— HSCP Team"
         );
 
