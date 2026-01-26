@@ -7,6 +7,7 @@ import com.hscp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     public User createUser(String name, String email) {
 
         if (userRepository.existsByEmail(email)) {
@@ -35,11 +37,12 @@ public class UserService {
         );
 
         userRepository.save(entity);
-
         return new User(id, name, email, now);
     }
 
+    @Transactional(readOnly = true)
     public User getUser(String id) {
+
         UserEntity entity = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
