@@ -16,12 +16,25 @@
         <option value="Interface" />
         <option value="Class" />
         <option value="Record" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/user-service" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "harshgoyalcse-sys"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/harshgoyalcse-sys/hyperscale-commerce-platform.git",
+    "accountId": "f121e7f1-0ee8-423f-8b52-4ab338242939"
+  }
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -52,7 +65,7 @@
     "git-widget-placeholder": "phase-1-foundation",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/goyalh216/Documents/hyperscale-commerce-platform/user-service/src/main/java/com/hscp/user",
+    "last_opened_file_path": "/Users/goyalh216/Documents/hyperscale-commerce-platform",
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
     "to.speed.mode.migration.done": "true"
   }
