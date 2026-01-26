@@ -1,34 +1,53 @@
 package com.hscp.user.service;
 
 import com.hscp.user.domain.User;
+import com.hscp.user.entity.UserEntity;
 import com.hscp.user.exception.UserNotFoundException;
+import com.hscp.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private final Map<String, User> store = new ConcurrentHashMap<>();
+    private final UserRepository userRepository;
 
     public User createUser(String name, String email) {
-        log.info("Creating user with email={}", email);
+
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already exists");
+        }
 
         String id = UUID.randomUUID().toString();
-        User user = new User(id, name, email, Instant.now());
+        Instant now = Instant.now();
 
-        store.put(id, user);
-        return user;
+        UserEntity entity = new UserEntity(
+                id,
+                name,
+                email,
+                now
+        );
+
+        userRepository.save(entity);
+
+        return new User(id, name, email, now);
     }
 
     public User getUser(String id) {
-        return store.computeIfAbsent(id, key -> {
-            throw new UserNotFoundException(id);
-        });
+        UserEntity entity = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return new User(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getCreatedAt()
+        );
     }
 }
