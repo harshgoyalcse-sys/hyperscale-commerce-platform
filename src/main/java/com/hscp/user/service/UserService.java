@@ -18,6 +18,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @Transactional
     public User createUser(String name, String email) {
@@ -37,6 +38,9 @@ public class UserService {
         );
 
         userRepository.save(entity);
+        // SIDE EFFECT
+        mailService.sendWelcomeMail(email, name);
+
         return new User(id, name, email, now);
     }
 
