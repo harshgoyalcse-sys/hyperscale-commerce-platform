@@ -2,6 +2,8 @@ package com.hscp.user.service;
 
 import com.hscp.user.domain.User;
 import com.hscp.user.entity.UserEntity;
+import com.hscp.user.event.producer.UserEventProducer;
+import com.hscp.user.event.user.UserCreatedEvent;
 import com.hscp.user.exception.UserNotFoundException;
 import com.hscp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final MailService mailService;
+    private final UserEventProducer userEventProducer;
 
     @Transactional
     public User createUser(String name, String email) {
@@ -38,8 +40,9 @@ public class UserService {
         );
 
         userRepository.save(entity);
-        // SIDE EFFECT
-        mailService.sendWelcomeMail(email, name);
+        UserCreatedEvent event =UserCreatedEvent.of(entity.getId(),entity.getName(),entity.getEmail());
+
+        userEventProducer.publishUserCreated(event);
 
         return new User(id, name, email, now);
     }
