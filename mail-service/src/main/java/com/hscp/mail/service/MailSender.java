@@ -12,7 +12,7 @@ public class MailSender {
 
     private final IdempotencyStore idempotencyStore;
     public void sendWelcomeMail(UserCreatedEvent event) {
-        String idempotencyKey = "WELCOME_MAIL_" + event.getUserId();
+        String idempotencyKey = "WELCOME_MAIL_" + event.getEmail();
         if(idempotencyStore.isProcessed(idempotencyKey)){
             log.info("🔁 Mail already sent for userId={}, skipping",
                     event.getUserId());
@@ -24,6 +24,6 @@ public class MailSender {
         // SMTP call
 
         idempotencyStore.markProcessed(idempotencyKey);
-        log.info("✅ Mail marked as sent for userId={}", event.getUserId());
+        log.info("✅ Mail marked as sent for userId={}", event.getEmail());
     }
 }
