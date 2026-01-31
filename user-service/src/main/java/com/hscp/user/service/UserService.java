@@ -22,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserEventProducer userEventProducer;
 
+
     @Transactional
     public User createUser(String name, String email) {
 
@@ -40,8 +41,12 @@ public class UserService {
         );
 
         userRepository.save(entity);
-        UserCreatedEvent event =UserCreatedEvent.of(entity.getId(),entity.getName(),entity.getEmail());
-
+        UserCreatedEvent event = new UserCreatedEvent(
+                id,
+                name,
+                email,
+                now
+        );
         userEventProducer.publishUserCreated(event);
 
         return new User(id, name, email, now);

@@ -1,22 +1,28 @@
 package com.hscp.user.event.producer;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hscp.user.event.user.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+
+
 @Component
 @RequiredArgsConstructor
 public class UserEventProducer {
 
-    private static final String USER_CREATED_TOPIC = "user-created";
-
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public void publishUserCreated(UserCreatedEvent event) {
-        kafkaTemplate.send(USER_CREATED_TOPIC, event.userId(), event);
-        log.info("Published UserCreatedEvent for userId={}", event.userId());
+        try {
+            String payload = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send("user.created", event.getUserId(), payload);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(
+                    "Failed to serialize UserCreatedEvent", e
+            );
+        }
     }
 }
