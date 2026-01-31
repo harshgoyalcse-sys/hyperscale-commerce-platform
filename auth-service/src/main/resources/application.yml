@@ -18,3 +18,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+jwt:
+  secret: "this-is-a-very-long-256-bit-secret-key-for-hs256-auth-service"
+  expiration-minutes: 15

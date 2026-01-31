@@ -1,5 +1,7 @@
 package com.hscp.auth.controller;
 
+import com.hscp.auth.dto.AuthResponse;
+import com.hscp.auth.dto.LoginRequest;
 import com.hscp.auth.dto.RegisterRequest;
 import com.hscp.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -18,5 +20,11 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody @Valid RegisterRequest request) {
         authService.register(request);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody @Valid LoginRequest request){
+        String token = authService.login(request);
+        return new AuthResponse(token);
     }
 }
