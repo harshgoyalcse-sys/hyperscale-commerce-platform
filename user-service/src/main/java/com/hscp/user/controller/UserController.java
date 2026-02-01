@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +17,18 @@ public class UserController {
 
     private final UserService userService;
 
+    // USER or ADMIN
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/me")
     public String me(Authentication authentication) {
-        return authentication.getName(); // userId from JWT (sub)
+        return authentication.getName(); // userId from JWT
+    }
+
+    // ADMIN only
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/users/{id}")
+    public User adminGetUser(@PathVariable String id) {
+        return userService.getUser(id);
     }
 
     @PostMapping
