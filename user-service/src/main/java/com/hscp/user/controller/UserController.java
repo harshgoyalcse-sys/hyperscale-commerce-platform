@@ -24,6 +24,11 @@ public class UserController {
         return authentication.getName(); // userId from JWT
     }
 
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello from User Service";
+    }
+
     // ADMIN only
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/users/{id}")
