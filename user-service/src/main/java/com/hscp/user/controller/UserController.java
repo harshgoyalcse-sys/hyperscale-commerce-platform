@@ -6,8 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,25 +15,27 @@ public class UserController {
 
     private final UserService userService;
 
-    // USER or ADMIN
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    // Gateway already authenticated & authorized
     @GetMapping("/me")
-    public String me(Authentication authentication) {
-        return authentication.getName(); // userId from JWT
+    public String me(
+            @RequestHeader("X-User-Id") String userId
+    ) {
+        return userId;
     }
 
+    // Public (allowed by gateway)
     @GetMapping("/hello")
     public String hello() {
         return "Hello from User Service";
     }
 
-    // ADMIN only
-    @PreAuthorize("hasRole('ADMIN')")
+    // ADMIN enforced at gateway
     @GetMapping("/admin/users/{id}")
     public User adminGetUser(@PathVariable String id) {
         return userService.getUser(id);
     }
 
+    // Gateway decides who can create
     @PostMapping
     public User create(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request.name(), request.email());

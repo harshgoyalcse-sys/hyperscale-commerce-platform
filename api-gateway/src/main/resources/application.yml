@@ -29,3 +29,6 @@ logging:
     org.springframework.cloud.gateway: TRACE
     org.springframework.http.server.reactive: DEBUG
     reactor.netty.http.client: DEBUG
+    com.hscp.api_gateway.security: DEBUG
+jwt:
+  secret: "this-is-a-very-long-256-bit-secret-key-for-hs256-auth-service"

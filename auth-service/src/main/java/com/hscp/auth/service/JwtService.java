@@ -26,15 +26,15 @@ public class JwtService {
         this.expirationMinutes = expirationMinutes;
     }
 
-    public String generateToken(String userId, String email, String role) {
+    public String generateToken(String userId, String role) {
+
         Instant now = Instant.now();
         Instant exp = now.plusSeconds(expirationMinutes * 60);
 
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(userId)          // 🔑 identity
                 .addClaims(Map.of(
-                        "email", email,
-                        "role", role
+                        "role", role          // 🔑 authorization
                 ))
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(exp))

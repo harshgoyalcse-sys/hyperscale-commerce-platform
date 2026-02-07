@@ -18,13 +18,15 @@ public class AuthService {
 
     public void register(RegisterRequest request) {
 
-        if (repository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already registered");
+        String email = request.getEmail().trim().toLowerCase();
+
+        if (repository.existsByEmail(email)) {
+            throw new RuntimeException("Email already registered");
         }
 
         AuthUser user = new AuthUser(
                 null,
-                request.getEmail().toLowerCase(),
+                email,
                 passwordEncoder.encode(request.getPassword()),
                 "USER"
         );
@@ -32,12 +34,21 @@ public class AuthService {
         repository.save(user);
     }
 
-    public String login(LoginRequest request){
-        AuthUser user = repository.findByEmail(request.getEmail().toLowerCase()).orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+    public String login(LoginRequest request) {
 
-        if(!passwordEncoder.matches(request.getPassword() , user.getPasswordHash())){
-            throw new IllegalArgumentException("Invalid credentials");
+        String email = request.getEmail().trim().toLowerCase();
+
+        AuthUser user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Invalid credentials");
         }
-        return jwtService.generateToken(user.getId(),user.getEmail(),user.getRole());
+
+        // 🔑 JWT subject = userId only
+        return jwtService.generateToken(
+                user.getId().toString(),
+                user.getRole()
+        );
     }
 }
