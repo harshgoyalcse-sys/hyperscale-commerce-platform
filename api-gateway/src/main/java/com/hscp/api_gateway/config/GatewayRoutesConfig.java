@@ -15,10 +15,6 @@ public class GatewayRoutesConfig {
 
                 .route("user-service", r -> r
                         .path("/users/**")
-                        .filters(f -> f
-                                .stripPrefix(1)     // /users/hello → /hello
-                                .prefixPath("/users") // /hello → /users/hello
-                        )
                         .uri("lb://USER-SERVICE")
                 )
 
