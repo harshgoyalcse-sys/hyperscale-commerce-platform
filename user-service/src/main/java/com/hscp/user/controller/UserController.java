@@ -22,6 +22,12 @@ public class UserController {
         return authentication.getName(); // userId
     }
 
+    @GetMapping("/slow")
+    public String slow() throws InterruptedException {
+        Thread.sleep(5000); // 5 seconds
+        return "slow";
+    }
+
 
     // Public (allowed by gateway)
     @GetMapping("/hello")
