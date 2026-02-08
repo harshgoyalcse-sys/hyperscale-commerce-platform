@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,11 +18,10 @@ public class UserController {
 
     // Gateway already authenticated & authorized
     @GetMapping("/me")
-    public String me(
-            @RequestHeader("X-User-Id") String userId
-    ) {
-        return userId;
+    public String me(Authentication authentication) {
+        return authentication.getName(); // userId
     }
+
 
     // Public (allowed by gateway)
     @GetMapping("/hello")
