@@ -34,6 +34,10 @@ public class GatewayRoutesConfig {
                                         .setRateLimiter(redisLimiterConfig.redisRateLimiter())
                                         .setKeyResolver(rateLimitConfig.userKeyResolver())
                                 )
+                                .circuitBreaker(cb -> cb
+                                        .setName("userServiceCB")
+                                        .setFallbackUri("forward:/fallback/user-service")
+                                )
                         )
                         .uri("lb://USER-SERVICE")
                 )
